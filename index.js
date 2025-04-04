@@ -6,6 +6,8 @@ const app = express();
 app.use(express.json());
 dotenv.config();
 const port = process.env.PORT || 3000;
+let contents;
+let model;
 
 app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
@@ -17,7 +19,7 @@ app.listen(port, async () => {
 
   const systemInstruction = "You are an expert researcher. You always stick to the facts in the sources provided, and never make up new facts. Now look at these research papers, and answer the following questions."
 
-  const contents =  await vertexAI.preview.cachedContents.create(
+  contents =  await vertexAI.preview.cachedContents.create(
     {
       model: "gemini-1.5-pro-002",
       contents: [
@@ -43,7 +45,8 @@ app.listen(port, async () => {
     }
   )
 
-  console.log("contents", contents);
+  console.log("cached contents", contents);
+  model = vertexAI.preview.getGenerativeModelFromCachedContent(contents)
   console.log("Context cache model initialized");
 });
 
@@ -52,7 +55,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/generate", async (req, res) => {
-  chat = model.startChat(cachedContent);
+  chat = await model.startChat(cachedContent);
   const { prompt } = req.body;
   const response = await chat.sendMessage(prompt);
   res.send(response);
