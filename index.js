@@ -30,6 +30,8 @@ app.listen(port, async () => {
                 mimeType: "application/pdf",
                 fileUri: "gs://cloud-samples-data/generative-ai/pdf/2312.11805v3.pdf"
               },
+            },
+            {
               fileData: {
                 mimeType: "application/pdf",
                 fileUri: "gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf"
